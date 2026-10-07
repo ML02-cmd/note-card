@@ -1,0 +1,22 @@
+# 敏感配置
+config.py
+.env
+
+# 数据库
+database.db
+*.db
+
+# 上传文件（忽略内容，但保留 .gitkeep）
+uploads/*
+!uploads/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
