@@ -15,14 +15,10 @@
         }
 
         body {
-            background: #f5f7fb;
-            background-image:
-                radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.10) 0%, transparent 45%),
-                radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.10) 0%, transparent 45%);
-            background-attachment: fixed;
+            background: #ebe8e0;
             padding: 20px 16px 40px;
             min-height: 100vh;
-            color: #1e293b;
+            color: #1a1a1a;
         }
 
         .card {
@@ -31,7 +27,8 @@
             padding: 26px;
             max-width: 640px;
             margin: 0 auto;
-            box-shadow: 0 8px 32px rgba(15, 23, 42, 0.08), 0 2px 8px rgba(15, 23, 42, 0.04);
+            border: 1px solid #ebe5d9;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.03);
             animation: fadeInUp 0.45s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
@@ -44,7 +41,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+            background: linear-gradient(90deg, #f0e3a8, #c8d9f0, #d8c8e8, #c8e0d0, #f0c8d8);
         }
 
         @keyframes fadeInUp {
@@ -62,7 +59,7 @@
         .card-title {
             font-size: 26px;
             font-weight: 700;
-            color: #0f172a;
+            color: #1a1a1a;
             margin-bottom: 10px;
             line-height: 1.35;
             letter-spacing: -0.02em;
@@ -70,7 +67,7 @@
 
         .card-time {
             font-size: 13px;
-            color: #94a3b8;
+            color: #b0aa9c;
             margin-bottom: 16px;
             display: flex;
             align-items: center;
@@ -83,7 +80,7 @@
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background: #cbd5e1;
+            background: #d5cfc0;
         }
 
         .tag-list {
@@ -94,27 +91,26 @@
         }
 
         .tag {
-            background: linear-gradient(135deg, #eef2ff, #e0e7ff);
-            color: #4f46e5;
+            background: #f0ece0;
+            color: #5a5548;
             padding: 5px 14px;
             border-radius: 20px;
             font-size: 13px;
             font-weight: 500;
-            box-shadow: 0 1px 3px rgba(99, 102, 241, 0.15);
         }
 
         .card-content {
             font-size: 17px;
             line-height: 1.85;
-            color: #334155;
-            white-space: pre-wrap;
+            color: #1a1a1a;
             margin-bottom: 22px;
+            white-space: pre-wrap;
             word-break: break-word;
         }
 
         .divider {
             height: 1px;
-            background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+            background: #ebe5d9;
             margin: 20px 0;
         }
 
@@ -123,7 +119,7 @@
             border-radius: 14px;
             margin: 14px 0;
             object-fit: cover;
-            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.10);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             display: block;
         }
 
@@ -135,7 +131,7 @@
 
         .tip {
             text-align: center;
-            color: #94a3b8;
+            color: #b0aa9c;
             font-size: 12px;
             margin-top: 28px;
             letter-spacing: 0.05em;
@@ -166,7 +162,7 @@
         .loading-card {
             text-align: center;
             padding: 80px 20px;
-            color: #94a3b8;
+            color: #b0aa9c;
         }
 
         .loading-card::before {
@@ -174,8 +170,8 @@
             display: block;
             width: 32px;
             height: 32px;
-            border: 3px solid #e2e8f0;
-            border-top-color: #6366f1;
+            border: 3px solid #ebe5d9;
+            border-top-color: #1a1a1a;
             border-radius: 50%;
             margin: 0 auto 16px;
             animation: spin 0.8s linear infinite;
@@ -185,6 +181,26 @@
             to {
                 transform: rotate(360deg);
             }
+        }
+
+        .img-scroll {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 10px;
+            margin: 14px 0;
+            padding-bottom: 6px;
+            scrollbar-width: none;
+        }
+
+        .img-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .img-scroll img {
+            flex: 0 0 85%;
+            margin: 0;
+            scroll-snap-align: center;
         }
 
         @media (max-width: 480px) {
@@ -221,51 +237,44 @@
 
         async function loadCard() {
             const box = document.getElementById("cardBox");
-
-            if (!noteId) {
-                box.innerHTML = '<p class="error">卡片ID缺失</p>';
-                return;
-            }
+            if (!noteId) { box.innerHTML = '<p class="error">卡片ID缺失</p>'; return; }
 
             try {
                 const res = await fetch(`${API_BASE}/api/note/${noteId}`);
                 const ret = await res.json();
-                if (ret.code !== 0) {
-                    box.innerHTML = `<p class="error">${ret.msg}</p>`;
-                    return;
-                }
+                if (ret.code !== 0) { box.innerHTML = `<p class="error">${ret.msg}</p>`; return; }
                 const data = ret.data;
 
                 const tags = (data.tags || "").split(",").filter(Boolean);
                 const tagHtml = tags.length
                     ? `<div class="tag-list">${tags.map(t => `<span class="tag">${t}</span>`).join("")}</div>`
                     : "";
+                const timeStr = data.create_time ? new Date(data.create_time).toLocaleString() : "";
+                const imgPaths = Array.isArray(data.img_paths) && data.img_paths.length
+                    ? data.img_paths : (data.img_path ? [data.img_path] : []);
 
-                const timeStr = data.create_time
-                    ? new Date(data.create_time).toLocaleString()
-                    : "";
-
-                const imgHtml = data.img_path
-                    ? `<img src="${API_BASE}/uploads/${data.img_path}" alt="卡片图片">`
-                    : "";
+                let imgHtml = "";
+                if (imgPaths.length === 1) {
+                    imgHtml = `<img src="${API_BASE}/uploads/${imgPaths[0]}" alt="卡片图片">`;
+                } else if (imgPaths.length > 1) {
+                    imgHtml = `<div class="img-scroll">${imgPaths.map(p => `<img src="${API_BASE}/uploads/${p}" alt="卡片图片">`).join("")}</div>`;
+                }
 
                 const audioHtml = data.audio_path
                     ? `<div class="divider"></div><audio controls src="${API_BASE}/uploads/${data.audio_path}">你的浏览器不支持音频</audio>`
                     : "";
 
                 box.innerHTML = `
-                    <div class="card-title"></div>
+                    ${data.title ? `<div class="card-title"></div>` : ""}
                     <div class="card-time"></div>
                     ${tagHtml}
-                    <div class="card-content"></div>
+                    ${data.content ? `<div class="card-content"></div>` : ""}
                     ${imgHtml}
                     ${audioHtml}
                 `;
-
-                // 用 textContent 防止 XSS
-                box.querySelector(".card-title").textContent = data.title || "无标题";
+                if (data.title) box.querySelector(".card-title").textContent = data.title;
                 box.querySelector(".card-time").textContent = timeStr;
-                box.querySelector(".card-content").textContent = data.content || "";
+                if (data.content) box.querySelector(".card-content").textContent = data.content;
             } catch (e) {
                 box.innerHTML = `<p class="error">加载失败：${e.message}</p>`;
             }

@@ -4,27 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>随笔卡片 · 管理</title>
+    <title>随笔卡片</title>
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --primary-light: #eef2ff;
-            --success: #10b981;
-            --warning: #f59e0b;
+            --bg-outer: #ebe8e0;
+            --bg: #ffffff;
+            --card-bg: #faf8f3;
+            --border: #e8e2d5;
+            --text: #1a1a1a;
+            --text-light: #7a7568;
+            --text-lighter: #b0aa9c;
+            --primary: #1a1a1a;
             --danger: #ef4444;
-            --purple: #8b5cf6;
-            --bg: #f5f7fb;
-            --card-bg: #ffffff;
-            --text: #1e293b;
-            --text-light: #64748b;
-            --text-lighter: #94a3b8;
-            --border: #e8ecf1;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
-            --shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.10);
-            --radius: 16px;
+            --success: #10b981;
+            --c-yellow: #f0e3a8;
+            --radius: 14px;
         }
 
         * {
@@ -37,64 +32,429 @@
 
         body {
             padding: 20px 16px 40px;
-            background: var(--bg);
-            background-image: radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.06) 0%, transparent 40%),
-                radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.06) 0%, transparent 40%);
-            background-attachment: fixed;
+            background: var(--bg-outer);
             color: var(--text);
-            max-width: 720px;
+            max-width: 760px;
             margin: 0 auto;
             min-height: 100vh;
         }
 
-        /* ===== 顶部标签导航 ===== */
-        .nav-tabs {
+        /* ========== 登录页 ========== */
+        #loginView {
+            position: fixed;
+            inset: 0;
             display: flex;
-            gap: 6px;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 6px;
-            border-radius: 14px;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid rgba(255, 255, 255, 0.8);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 50%, #4a4a4a 100%);
+            z-index: 1000;
         }
 
-        .nav-tabs button {
-            flex: 1;
-            background: transparent;
+        .login-card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 40px 32px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+        }
+
+        .login-logo {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            border-radius: 20px;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            color: var(--text);
+            margin-bottom: 6px;
+            letter-spacing: -0.02em;
+        }
+
+        .login-subtitle {
+            font-size: 14px;
             color: var(--text-light);
-            border: none;
-            padding: 12px;
-            font-size: 15px;
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .login-field {
+            margin-bottom: 16px;
+        }
+
+        .login-field label {
+            display: block;
+            font-size: 13px;
             font-weight: 500;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.25s ease;
+            color: var(--text-light);
+            margin-bottom: 6px;
         }
 
-        .nav-tabs button.active {
-            background: var(--primary);
+        .login-field input {
+            width: 100%;
+            padding: 13px 16px;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            font-size: 15px;
+            background: #faf8f3;
+            color: var(--text);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .login-field input:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(26, 26, 26, 0.08);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            background: #1a1a1a;
             color: #fff;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: all 0.2s;
         }
 
-        .nav-tabs button:not(.active):hover {
-            background: rgba(99, 102, 241, 0.08);
-            color: var(--primary);
+        .login-btn:hover {
+            background: #000;
         }
 
-        /* ===== 标题 ===== */
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .login-error {
+            color: var(--danger);
+            font-size: 13px;
+            text-align: center;
+            margin-top: 12px;
+            min-height: 18px;
+        }
+
+        .login-footer {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-lighter);
+            margin-top: 24px;
+        }
+
+        /* ========== App 界面 ========== */
+        #appView {
+            display: none;
+        }
+
+        #appView.show {
+            display: block;
+        }
+
+        .main-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            min-height: calc(100vh - 80px);
+        }
+
+        /* ===== 顶部导航 ===== */
+        .top-nav {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            background: #f5f3ee;
+            border-radius: 14px;
+            padding: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #ebe5d9;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .top-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .top-nav button {
+            background: transparent;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #7a7568;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+
+        .top-nav button:hover {
+            background: #fff;
+            color: #1a1a1a;
+        }
+
+        .top-nav button.active {
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .top-nav button .icon {
+            font-size: 15px;
+        }
+
+        /* ===== Hero ===== */
+        .home-hero {
+            margin-bottom: 22px;
+        }
+
+        .home-hero .greeting {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .home-hero h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        .home-hero p {
+            color: var(--text-light);
+            font-size: 13px;
+            margin-bottom: 14px;
+        }
+
+        .btn-hero {
+            background: #1a1a1a;
+            color: #fff;
+            border-radius: 9px;
+            padding: 9px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-hero:hover {
+            background: #000;
+        }
+
+        /* ===== 区块标题 ===== */
+        .home-section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-light);
+            margin: 0 4px 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .home-section-title .more {
+            font-size: 12px;
+            color: var(--text-light);
+            cursor: pointer;
+            text-transform: none;
+            letter-spacing: 0;
+            font-weight: 500;
+        }
+
+        .home-section-title .more:hover {
+            color: var(--text);
+        }
+
+        /* ===== 首页网格 ===== */
+        .home-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .home-card {
+            background: #faf8f3;
+            border-radius: 12px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.25s;
+            border: 1px solid #ebe5d9;
+            overflow: hidden;
+        }
+
+        .home-card:hover {
+            background: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .home-card .thumb {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 9px;
+            background: #f0ece0;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .home-card .thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .home-card .thumb.voice {
+            background: linear-gradient(135deg, #d8c8e8, #c8d9f0);
+            color: #5a4a7a;
+        }
+
+        .home-card .thumb .count-badge {
+            position: absolute;
+            bottom: 6px;
+            right: 6px;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            font-size: 10px;
+            padding: 1px 6px;
+            border-radius: 8px;
+        }
+
+        .home-card:not(:has(.thumb)) {
+            padding: 14px 12px 12px;
+        }
+
+        .home-card:not(:has(.thumb)) .title {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .home-card .title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 3px;
+        }
+
+        .home-card .meta {
+            font-size: 11px;
+            color: var(--text-lighter);
+        }
+
+        /* ===== 波形 ===== */
+        .waveform {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .waveform span {
+            display: block;
+            width: 3px;
+            border-radius: 2px;
+            background: #5a4a7a;
+            opacity: 0.75;
+            animation: wave 1.2s ease-in-out infinite;
+        }
+
+        .waveform span:nth-child(1) {
+            height: 30%;
+            animation-delay: 0s;
+        }
+
+        .waveform span:nth-child(2) {
+            height: 60%;
+            animation-delay: 0.1s;
+        }
+
+        .waveform span:nth-child(3) {
+            height: 100%;
+            animation-delay: 0.2s;
+        }
+
+        .waveform span:nth-child(4) {
+            height: 50%;
+            animation-delay: 0.3s;
+        }
+
+        .waveform span:nth-child(5) {
+            height: 80%;
+            animation-delay: 0.4s;
+        }
+
+        .waveform span:nth-child(6) {
+            height: 40%;
+            animation-delay: 0.5s;
+        }
+
+        .waveform span:nth-child(7) {
+            height: 70%;
+            animation-delay: 0.6s;
+        }
+
+        .waveform span:nth-child(8) {
+            height: 25%;
+            animation-delay: 0.7s;
+        }
+
+        @keyframes wave {
+
+            0%,
+            100% {
+                transform: scaleY(0.5);
+            }
+
+            50% {
+                transform: scaleY(1.2);
+            }
+        }
+
+        /* ===== 通用 ===== */
         h2 {
             font-size: 18px;
             margin: 0 0 16px;
             color: var(--text);
-            font-weight: 600;
+            font-weight: 700;
+            letter-spacing: -0.01em;
             display: flex;
             align-items: center;
             gap: 8px;
-            letter-spacing: -0.01em;
         }
 
         h2::before {
@@ -102,19 +462,20 @@
             display: inline-block;
             width: 4px;
             height: 18px;
-            background: linear-gradient(180deg, var(--primary), var(--purple));
+            background: #1a1a1a;
             border-radius: 4px;
         }
 
-        /* ===== 卡片容器 ===== */
         section {
-            background: var(--card-bg);
+            background: #faf8f3;
             border-radius: var(--radius);
-            padding: 22px;
-            margin-bottom: 18px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            animation: fadeIn 0.35s ease;
+            padding: 18px;
+            margin-bottom: 16px;
+            border: 1px solid #ebe5d9;
+        }
+
+        .view {
+            animation: fadeIn 0.3s ease;
         }
 
         @keyframes fadeIn {
@@ -129,171 +490,96 @@
             }
         }
 
-        /* ===== 输入框 ===== */
         input[type="text"],
         textarea {
             width: 100%;
             border: 1.5px solid var(--border);
-            border-radius: 12px;
-            padding: 13px 14px;
-            font-size: 15px;
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 14px;
             margin: 8px 0;
             outline: none;
-            transition: all 0.2s ease;
-            background: #fafbfc;
+            transition: all 0.2s;
+            background: #fff;
             color: var(--text);
             font-family: inherit;
-        }
-
-        input[type="text"]:hover,
-        textarea:hover {
-            border-color: #d5dae2;
-            background: #fff;
         }
 
         input[type="text"]:focus,
         textarea:focus {
             border-color: var(--primary);
             background: #fff;
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+            box-shadow: 0 0 0 4px rgba(26, 26, 26, 0.06);
         }
 
         textarea {
-            min-height: 130px;
+            min-height: 120px;
             resize: vertical;
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
-        /* ===== 按钮 ===== */
         button {
             border: none;
-            border-radius: 12px;
-            padding: 13px 18px;
-            font-size: 15px;
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 14px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s;
             font-family: inherit;
         }
 
-        button:active {
-            transform: scale(0.98);
-        }
-
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);
+            background: #1a1a1a;
             color: #fff;
             width: 100%;
             margin-top: 10px;
-            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
         }
 
         .btn-primary:hover {
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
-            transform: translateY(-1px);
+            background: #000;
         }
 
-        .btn-sm {
-            padding: 7px 12px;
-            font-size: 13px;
-            width: auto;
-            margin: 2px;
-            border-radius: 8px;
-            font-weight: 500;
-        }
-
-        .btn-qr {
-            background: #ecfdf5;
-            color: var(--success);
-        }
-
-        .btn-qr:hover {
-            background: var(--success);
-            color: #fff;
-        }
-
-        .btn-edit {
-            background: #fffbeb;
-            color: var(--warning);
-        }
-
-        .btn-edit:hover {
-            background: var(--warning);
-            color: #fff;
-        }
-
-        .btn-del {
-            background: #fef2f2;
-            color: var(--danger);
-        }
-
-        .btn-del:hover {
-            background: var(--danger);
-            color: #fff;
-        }
-
-        .btn-view {
-            background: var(--primary-light);
-            color: var(--primary);
-        }
-
-        .btn-view:hover {
-            background: var(--primary);
-            color: #fff;
-        }
-
-        /* ===== 卡片列表项 ===== */
+        /* ===== 卡片列表 ===== */
         .note-item {
-            border: 1px solid var(--border);
-            border-radius: 14px;
+            border: 1px solid #ebe5d9;
+            border-radius: 12px;
             padding: 14px;
-            margin: 10px 0;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            margin: 8px 0;
+            transition: all 0.25s;
             background: #fff;
             display: flex;
             gap: 14px;
             align-items: flex-start;
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .note-item::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background: linear-gradient(180deg, var(--primary), var(--purple));
-            opacity: 0;
-            transition: opacity 0.25s;
         }
 
         .note-item:hover {
-            box-shadow: var(--shadow-lg);
-            transform: translateY(-3px);
-            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+            transform: translateY(-2px);
+            border-color: #d5cfc0;
         }
 
-        .note-item:hover::before {
-            opacity: 1;
+        .note-item:not(:has(.note-thumb)) {
+            padding: 14px 16px;
+        }
+
+        .note-item:not(:has(.note-thumb)) .note-title {
+            font-size: 16px;
         }
 
         .note-thumb {
-            width: 68px;
-            height: 68px;
-            border-radius: 12px;
-            object-fit: cover;
+            width: 64px;
+            height: 64px;
+            border-radius: 10px;
             flex-shrink: 0;
-            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            background: #f0ece0;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--text-lighter);
             font-size: 11px;
             overflow: hidden;
-            box-shadow: var(--shadow-sm);
         }
 
         .note-thumb img {
@@ -302,13 +588,18 @@
             object-fit: cover;
         }
 
+        .note-thumb.voice {
+            background: linear-gradient(135deg, #d8c8e8, #c8d9f0);
+            color: #5a4a7a;
+        }
+
         .note-body {
             flex: 1;
             min-width: 0;
         }
 
         .note-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             margin-bottom: 5px;
             color: var(--text);
@@ -319,7 +610,7 @@
 
         .note-content {
             color: var(--text-light);
-            font-size: 14px;
+            font-size: 13px;
             line-height: 1.55;
             margin-bottom: 8px;
             white-space: pre-wrap;
@@ -330,7 +621,7 @@
         }
 
         .note-meta {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-lighter);
             margin-bottom: 10px;
             display: flex;
@@ -339,20 +630,20 @@
             flex-wrap: wrap;
         }
 
-        .note-meta .public-badge {
+        .public-badge {
             padding: 2px 8px;
             border-radius: 20px;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 500;
         }
 
         .public-badge.yes {
-            background: #ecfdf5;
+            background: #e8f5ee;
             color: var(--success);
         }
 
         .public-badge.no {
-            background: #f8fafc;
+            background: #f0ece0;
             color: var(--text-lighter);
         }
 
@@ -360,6 +651,55 @@
             display: flex;
             gap: 4px;
             flex-wrap: wrap;
+        }
+
+        .btn-sm {
+            padding: 6px 11px;
+            font-size: 12px;
+            width: auto;
+            margin: 2px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .btn-view {
+            background: #eef2f8;
+            color: #4b6b9a;
+        }
+
+        .btn-view:hover {
+            background: #4b6b9a;
+            color: #fff;
+        }
+
+        .btn-qr {
+            background: #e8f5ee;
+            color: var(--success);
+        }
+
+        .btn-qr:hover {
+            background: var(--success);
+            color: #fff;
+        }
+
+        .btn-edit {
+            background: #fbf3dd;
+            color: #b88a2b;
+        }
+
+        .btn-edit:hover {
+            background: #b88a2b;
+            color: #fff;
+        }
+
+        .btn-del {
+            background: #fdecec;
+            color: var(--danger);
+        }
+
+        .btn-del:hover {
+            background: var(--danger);
+            color: #fff;
         }
 
         /* ===== 标签 ===== */
@@ -371,11 +711,11 @@
         }
 
         .tag {
-            background: var(--primary-light);
-            color: var(--primary);
-            padding: 3px 11px;
+            background: #f0ece0;
+            color: #5a5548;
+            padding: 2px 10px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
             display: inline-flex;
             align-items: center;
@@ -384,64 +724,119 @@
 
         .tag .remove-tag {
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             line-height: 1;
             opacity: 0.6;
-            transition: opacity 0.2s;
-        }
-
-        .tag .remove-tag:hover {
-            opacity: 1;
         }
 
         .tag-filter {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
             margin-bottom: 14px;
         }
 
         .tag-filter button {
-            background: #f8fafc;
+            background: #fff;
             color: var(--text-light);
-            padding: 6px 14px;
-            font-size: 13px;
+            padding: 5px 12px;
+            font-size: 12px;
             border-radius: 20px;
             width: auto;
             margin: 0;
-            border: 1px solid var(--border);
+            border: 1px solid #ebe5d9;
             font-weight: 500;
         }
 
         .tag-filter button:hover {
-            background: var(--primary-light);
-            color: var(--primary);
-            border-color: var(--primary-light);
+            background: #f0ece0;
+            color: var(--text);
         }
 
         .tag-filter button.active {
-            background: var(--primary);
+            background: #1a1a1a;
             color: #fff;
-            border-color: var(--primary);
-            box-shadow: 0 3px 10px rgba(99, 102, 241, 0.3);
+            border-color: #1a1a1a;
         }
 
-        /* ===== 预览框 ===== */
+        .search-shortcuts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 8px 0 14px;
+        }
+
+        .search-shortcuts button {
+            background: #fff;
+            color: var(--text-light);
+            border: 1px solid #ebe5d9;
+            padding: 4px 11px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            width: auto;
+            margin: 0;
+            transition: all 0.2s;
+        }
+
+        .search-shortcuts button:hover {
+            background: #1a1a1a;
+            color: #fff;
+            border-color: #1a1a1a;
+        }
+
+        /* ===== 预览 ===== */
         .preview-box {
-            margin: 12px 0;
+            margin: 10px 0;
             padding: 12px;
-            border: 1.5px dashed var(--border);
+            border: 1.5px dashed #d5cfc0;
             border-radius: 12px;
-            background: #fafbfc;
-            animation: fadeIn 0.3s ease;
+            background: #fff;
         }
 
-        .preview-box img {
-            max-width: 100%;
-            max-height: 200px;
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px;
+        }
+
+        .preview-item {
+            position: relative;
+            aspect-ratio: 1;
             border-radius: 10px;
+            overflow: hidden;
+            background: #f0ece0;
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             display: block;
-            box-shadow: var(--shadow-sm);
+        }
+
+        .preview-item .remove-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.55);
+            color: #fff;
+            border: none;
+            font-size: 13px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .preview-item .remove-btn:hover {
+            background: var(--danger);
         }
 
         .preview-box audio {
@@ -453,47 +848,42 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            margin: 14px 0;
-            padding: 12px 14px;
-            background: #fafbfc;
+            margin: 12px 0;
+            padding: 10px 14px;
+            background: #fff;
             border-radius: 12px;
-            border: 1.5px solid var(--border);
-            transition: all 0.2s;
-        }
-
-        .checkbox-row:hover {
-            border-color: #d5dae2;
+            border: 1.5px solid #ebe5d9;
         }
 
         .checkbox-row input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            accent-color: var(--primary);
+            width: 18px;
+            height: 18px;
+            accent-color: #1a1a1a;
             cursor: pointer;
         }
 
         .checkbox-row label {
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-light);
             user-select: none;
         }
 
         #recordAudioBtn {
-            background: linear-gradient(135deg, var(--purple), #a78bfa);
-            color: white;
+            background: #d8c8e8;
+            color: #5a4a7a;
             width: 100%;
             margin-top: 10px;
-            box-shadow: 0 4px 14px rgba(139, 92, 246, 0.35);
+            font-weight: 600;
         }
 
         #recordAudioBtn:hover {
-            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.45);
-            transform: translateY(-1px);
+            background: #c8b8d8;
         }
 
         #recordAudioBtn.recording {
-            background: linear-gradient(135deg, var(--danger), #f87171);
+            background: #f0c8d8;
+            color: #b04a6a;
             animation: pulse 1.5s infinite;
         }
 
@@ -501,51 +891,38 @@
 
             0%,
             100% {
-                box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+                box-shadow: 0 0 0 0 rgba(240, 200, 216, 0.7);
             }
 
             50% {
-                box-shadow: 0 4px 24px rgba(239, 68, 68, 0.6);
+                box-shadow: 0 0 0 8px rgba(240, 200, 216, 0);
             }
         }
 
-        /* ===== 文件上传美化 ===== */
         input[type="file"] {
             width: 100%;
             padding: 10px;
-            border: 1.5px dashed var(--border);
+            border: 1.5px dashed #d5cfc0;
             border-radius: 12px;
-            background: #fafbfc;
-            font-size: 14px;
+            background: #fff;
+            font-size: 13px;
             color: var(--text-light);
             cursor: pointer;
-            transition: all 0.2s;
             margin: 8px 0;
         }
 
-        input[type="file"]:hover {
-            border-color: var(--primary);
-            background: var(--primary-light);
-        }
-
         input[type="file"]::file-selector-button {
-            background: var(--primary);
+            background: #1a1a1a;
             color: #fff;
             border: none;
-            padding: 8px 14px;
+            padding: 7px 13px;
             border-radius: 8px;
             margin-right: 12px;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
-            transition: background 0.2s;
         }
 
-        input[type="file"]::file-selector-button:hover {
-            background: var(--primary-hover);
-        }
-
-        /* ===== 标签输入行 ===== */
         .tag-input-row {
             display: flex;
             gap: 8px;
@@ -560,15 +937,10 @@
 
         .tag-input-row button {
             width: auto;
-            background: var(--primary);
+            background: #1a1a1a;
             color: #fff;
-            padding: 13px 18px;
+            padding: 12px 16px;
             white-space: nowrap;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
-        }
-
-        .tag-input-row button:hover {
-            background: var(--primary-hover);
         }
 
         /* ===== 弹窗 ===== */
@@ -578,7 +950,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 23, 42, 0.5);
+            background: rgba(26, 26, 26, 0.55);
             backdrop-filter: blur(6px);
             -webkit-backdrop-filter: blur(6px);
             display: none;
@@ -586,7 +958,6 @@
             justify-content: center;
             z-index: 999;
             padding: 16px;
-            animation: fadeIn 0.2s ease;
         }
 
         .modal.show {
@@ -595,31 +966,18 @@
 
         .modal-box {
             background: #fff;
-            padding: 26px;
+            padding: 24px;
             border-radius: 20px;
             text-align: center;
             max-width: 340px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: var(--shadow-lg);
-            animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px) scale(0.96);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.25);
         }
 
         .modal-box.wide {
-            max-width: 600px;
+            max-width: 560px;
             text-align: left;
         }
 
@@ -630,172 +988,474 @@
         }
 
         .modal h3 {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 600;
             color: var(--text);
             margin-bottom: 8px;
         }
 
         .modal-close {
-            margin-top: 16px;
-            background: #f1f5f9;
+            margin-top: 14px;
+            background: #f0ece0;
             color: var(--text-light);
             width: 100%;
             font-weight: 500;
         }
 
         .modal-close:hover {
-            background: #e2e8f0;
+            background: #e8e2d5;
             color: var(--text);
-        }
-
-        .detail-img {
-            width: 100%;
-            border-radius: 12px;
-            margin: 12px 0;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .detail-content {
-            white-space: pre-wrap;
-            line-height: 1.75;
-            color: var(--text);
-            margin: 12px 0;
-            font-size: 15px;
-        }
-
-        .detail-time {
-            color: var(--text-lighter);
-            font-size: 13px;
-            margin-bottom: 10px;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 12px;
-            color: var(--primary);
-            font-size: 14px;
-        }
-
-        .loading::before {
-            content: "";
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            border: 2px solid var(--primary-light);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
         }
 
         .hidden {
             display: none !important;
         }
 
-        /* ===== 空状态 ===== */
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
+            padding: 60px 20px;
             color: var(--text-lighter);
         }
 
         .empty-state .emoji {
             font-size: 48px;
             margin-bottom: 12px;
+            opacity: 0.5;
             display: block;
-            opacity: 0.6;
         }
 
-        .empty-state p {
+        /* ===== 详情轮播 ===== */
+        .carousel-wrap {
+            position: relative;
+            background: #faf8f3;
+            border-radius: 14px;
+            padding: 18px 14px;
+            margin: 12px 0;
+        }
+
+        .carousel-track {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 12px;
+            scrollbar-width: none;
+        }
+
+        .carousel-track::-webkit-scrollbar {
+            display: none;
+        }
+
+        .carousel-slide {
+            flex: 0 0 100%;
+            scroll-snap-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 160px;
+            text-align: center;
+        }
+
+        .carousel-slide img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 12px;
+        }
+
+        .carousel-slide .slide-text {
+            white-space: pre-wrap;
+            line-height: 1.75;
+            color: var(--text);
             font-size: 14px;
+            text-align: left;
+            width: 100%;
         }
 
-        /* ===== 移动端优化 ===== */
+        .carousel-slide .slide-text-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text);
+            text-align: left;
+            width: 100%;
+        }
+
+        .carousel-slide audio {
+            width: 100%;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .carousel-dots span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #cbd5e1;
+            transition: all 0.2s;
+        }
+
+        .carousel-dots span.active {
+            background: #1a1a1a;
+            width: 16px;
+            border-radius: 3px;
+        }
+
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #ebe5d9;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            color: var(--text-light);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .carousel-arrow:hover {
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .carousel-arrow.prev {
+            left: 4px;
+        }
+
+        .carousel-arrow.next {
+            right: 4px;
+        }
+
+        /* ===== 日历 ===== */
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .calendar-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .cal-nav-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: #fff;
+            color: var(--text-light);
+            border: 1px solid #ebe5d9;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .cal-nav-btn:hover {
+            background: #1a1a1a;
+            color: #fff;
+            border-color: #1a1a1a;
+        }
+
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-bottom: 4px;
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-lighter);
+            font-weight: 500;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-bottom: 14px;
+        }
+
+        .cal-cell {
+            height: 44px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fff;
+            position: relative;
+            padding: 2px 0;
+            border: 1px solid transparent;
+        }
+
+        .cal-cell:hover:not(.empty) {
+            border-color: #d5cfc0;
+        }
+
+        .cal-cell.empty {
+            cursor: default;
+            opacity: 0;
+            pointer-events: none;
+            background: transparent;
+        }
+
+        .cal-cell .day {
+            font-size: 13px;
+            color: var(--text);
+            font-weight: 500;
+            line-height: 1;
+        }
+
+        .cal-cell.today {
+            box-shadow: inset 0 0 0 2px #1a1a1a;
+        }
+
+        .cal-cell.today .day {
+            color: #1a1a1a;
+            font-weight: 700;
+        }
+
+        .cal-cell.has-content {
+            background: var(--c-yellow);
+            border-color: #e6d590;
+        }
+
+        .cal-cell.has-content .day {
+            color: #1a1a1a;
+            font-weight: 700;
+        }
+
+        .cal-cell.selected {
+            background: #1a1a1a;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-color: #1a1a1a;
+        }
+
+        .cal-cell.selected .day {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .calendar-selected {
+            margin-top: 4px;
+            padding-top: 14px;
+            border-top: 1px solid #ebe5d9;
+        }
+
+        .calendar-selected .date-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .calendar-selected .date-label::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 13px;
+            background: #1a1a1a;
+            border-radius: 4px;
+        }
+
+        .calendar-selected .empty-tip {
+            text-align: center;
+            color: var(--text-lighter);
+            font-size: 12px;
+            padding: 14px 0;
+        }
+
         @media (max-width: 480px) {
             body {
-                padding: 14px 12px 32px;
+                padding: 12px 10px 40px;
             }
 
-            section {
-                padding: 18px;
-                border-radius: 14px;
+            .main-card {
+                padding: 14px;
+                border-radius: 16px;
+            }
+
+            .home-hero h1 {
+                font-size: 20px;
+            }
+
+            .home-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 10px;
             }
 
             .note-thumb {
-                width: 56px;
-                height: 56px;
+                width: 52px;
+                height: 52px;
             }
 
-            .note-title {
-                font-size: 15px;
+            .top-nav button {
+                padding: 9px 10px;
+                font-size: 12px;
             }
 
-            .note-content {
-                font-size: 13px;
+            .top-nav button .icon {
+                font-size: 14px;
+            }
+
+            .cal-cell {
+                height: 40px;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="nav-tabs">
-        <button id="tabEdit" class="active" onclick="switchTab('edit')">✏️ 新建 / 编辑</button>
-        <button id="tabList" onclick="switchTab('list')">📋 卡片列表</button>
+    <!-- ========== 登录页 ========== -->
+    <div id="loginView">
+        <div class="login-card">
+            <div class="login-logo">📝</div>
+            <div class="login-title">随笔卡片</div>
+            <div class="login-subtitle">记录每一次灵感</div>
+            <div class="login-field">
+                <label>账号</label>
+                <input type="text" id="loginUser" placeholder="请输入账号" autocomplete="username">
+            </div>
+            <div class="login-field">
+                <label>密码</label>
+                <input type="password" id="loginPass" placeholder="请输入密码" autocomplete="current-password">
+            </div>
+            <button class="login-btn" id="loginBtn" onclick="doLogin()">进入</button>
+            <div class="login-error" id="loginError"></div>
+            <div class="login-footer">© 随笔卡片 · 2026</div>
+        </div>
     </div>
 
-    <!-- ========== 编辑界面 ========== -->
-    <div id="editView">
-        <h2>极速记录</h2>
-        <section>
-            <input type="text" id="title" placeholder="给这张卡片起个标题...">
-            <textarea id="content" rows="4" placeholder="写下你的随笔文字..."></textarea>
-
-            <div class="tag-input-row">
-                <input type="text" id="tagInput" placeholder="输入标签，如：生活 / 灵感">
-                <button onclick="addTag()">+ 添加</button>
-            </div>
-            <div class="tag-list" id="tagList"></div>
-
-            <input type="file" id="imgInput" accept="image/*" capture="environment">
-            <div class="preview-box hidden" id="imgPreviewBox">
-                <img id="imgPreview" alt="图片预览">
-                <button class="btn-sm btn-del" style="margin-top:8px" onclick="clearImage()">移除图片</button>
-            </div>
-
-            <button id="recordAudioBtn">🎤 点击开始录音</button>
-            <div class="preview-box hidden" id="audioPreviewBox">
-                <audio id="audioPreview" controls></audio>
-                <button class="btn-sm btn-del" style="margin-top:8px" onclick="clearAudio()">移除录音</button>
+    <!-- ========== App 主界面 ========== -->
+    <div id="appView">
+        <div class="main-card">
+            <!-- 顶部导航 -->
+            <div class="top-nav">
+                <button id="navHome" class="active" onclick="switchTab('home')">
+                    <span class="icon">🏠</span> 首页
+                </button>
+                <button id="navCalendar" onclick="switchTab('calendar')">
+                    <span class="icon">📅</span> 日历
+                </button>
+                <button id="navList" onclick="switchTab('list')">
+                    <span class="icon">📋</span> 卡片
+                </button>
+                <button id="navEdit" onclick="switchTab('edit')">
+                    <span class="icon">✏️</span> 写一张
+                </button>
+                <button id="navLogout" onclick="doLogout()">
+                    <span class="icon">🚪</span> 退出
+                </button>
             </div>
 
-            <div class="checkbox-row">
-                <input type="checkbox" id="isPublic">
-                <label for="isPublic">🌐 开启公开（开启后可通过二维码分享）</label>
-            </div>
-            <div class="loading" id="submitLoading">保存中...</div>
-            <button id="submitBtn" class="btn-primary">✅ 保存卡片</button>
-            <button class="btn-primary" style="background:#f1f5f9;color:#64748b;box-shadow:none;margin-top:8px"
-                onclick="resetForm()">重置表单</button>
-        </section>
-    </div>
+            <!-- 首页 -->
+            <div id="homeView" class="view">
+                <div class="home-hero">
+                    <div class="greeting">👋 你好，<span id="greetName"></span></div>
+                    <h1>随笔卡片</h1>
+                    <p>记录每一次灵感 · 图文音随时回看</p>
+                    <button class="btn-hero" onclick="switchTab('edit')">✏️ 写一张新卡片</button>
+                </div>
 
-    <!-- ========== 列表界面 ========== -->
-    <div id="listView" class="hidden">
-        <h2>我的卡片</h2>
-        <section>
-            <input type="text" id="searchInput" placeholder="🔍 搜索标题或正文内容...">
-            <div class="tag-filter" id="tagFilter"></div>
-            <div id="noteList"></div>
-        </section>
+                <div class="home-section-title">
+                    <span>最近卡片</span>
+                    <span class="more" onclick="switchTab('list')">查看全部 →</span>
+                </div>
+                <div class="home-grid" id="homeGrid"></div>
+            </div>
+
+            <!-- 卡片列表 -->
+            <div id="listView" class="view hidden">
+                <h2>我的卡片</h2>
+                <section>
+                    <input type="text" id="searchInput" placeholder="🔍 搜标题 / 正文 / 标签 / 日期 / 类型...">
+                    <div class="search-shortcuts">
+                        <button onclick="quickSearch('语音')">🎤 语音</button>
+                        <button onclick="quickSearch('图片')">🖼️ 图片</button>
+                        <button onclick="quickSearch(今天Str())">📅 今天</button>
+                        <button onclick="quickSearch('')">全部</button>
+                    </div>
+                    <div class="tag-filter" id="tagFilter"></div>
+                    <div id="noteList"></div>
+                </section>
+            </div>
+
+            <!-- 日历 -->
+            <div id="calendarView" class="view hidden">
+                <h2>创作日历</h2>
+                <section>
+                    <div class="calendar-header">
+                        <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+                        <div class="calendar-title" id="calendarTitle"></div>
+                        <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+                    </div>
+                    <div class="calendar-weekdays">
+                        <span>日</span><span>一</span><span>二</span><span>三</span>
+                        <span>四</span><span>五</span><span>六</span>
+                    </div>
+                    <div class="calendar-grid" id="calendarGrid"></div>
+                    <div class="calendar-selected" id="calendarSelected"></div>
+                </section>
+            </div>
+
+            <!-- 编辑 -->
+            <div id="editView" class="view hidden">
+                <h2>极速记录</h2>
+                <section>
+                    <input type="text" id="title" placeholder="标题（可留空）">
+
+                    <textarea id="content" placeholder="正文（可留空）..."></textarea>
+
+                    <div class="tag-input-row">
+                        <input type="text" id="tagInput" placeholder="输入标签，如：生活 / 灵感">
+                        <button onclick="addTag()">+ 添加</button>
+                    </div>
+                    <div class="tag-list" id="tagList"></div>
+
+                    <input type="file" id="imgInput" accept="image/*" multiple>
+                    <div class="preview-box hidden" id="imgPreviewBox">
+                        <div class="preview-grid" id="imgPreviewGrid"></div>
+                        <div style="font-size:12px;color:var(--text-lighter);margin-top:8px">
+                            最多 9 张，已选 <span id="imgCount">0</span> / 9
+                        </div>
+                    </div>
+
+                    <button id="recordAudioBtn">🎤 点击开始录音</button>
+                    <div class="preview-box hidden" id="audioPreviewBox">
+                        <audio id="audioPreview" controls></audio>
+                        <button class="btn-sm btn-del" style="margin-top:8px" onclick="clearAudio()">移除录音</button>
+                    </div>
+
+                    <div class="checkbox-row">
+                        <input type="checkbox" id="isPublic">
+                        <label for="isPublic">🌐 开启公开（开启后可通过二维码分享）</label>
+                    </div>
+                    <button id="submitBtn" class="btn-primary">✅ 保存卡片</button>
+                    <button class="btn-primary" style="background:#f0ece0;color:#7a7568;box-shadow:none;margin-top:8px"
+                        onclick="resetForm()">重置表单</button>
+                </section>
+            </div>
+        </div>
     </div>
 
     <!-- 二维码弹窗 -->
@@ -803,7 +1463,7 @@
         <div class="modal-box">
             <h3>📱 扫码查看卡片</h3>
             <div id="qrCanvasBox"></div>
-            <p style="font-size:13px;color:#94a3b8;margin-top:6px">用手机相机或浏览器扫描</p>
+            <p style="font-size:13px;color:#7a7568;margin-top:6px">用手机相机或浏览器扫描</p>
             <button class="modal-close" onclick="closeQrModal()">关闭</button>
         </div>
     </div>
@@ -812,35 +1472,115 @@
     <div class="modal" id="detailModal">
         <div class="modal-box wide">
             <h3 id="detailTitle" style="margin-bottom:8px"></h3>
-            <div class="detail-time" id="detailTime"></div>
+            <div id="detailTime" style="color:#7a7568;font-size:13px;margin-bottom:10px"></div>
             <div class="tag-list" id="detailTags"></div>
-            <div class="detail-content" id="detailContent"></div>
-            <div id="detailImgBox"></div>
-            <div id="detailAudioBox"></div>
+            <div id="detailCarousel"></div>
             <button class="modal-close" onclick="closeDetailModal()">关闭</button>
         </div>
     </div>
 
     <script>
-        // ===== 全局变量 =====
+        // ===== 全局 =====
         const API_BASE = "";
-        const TUNNEL_URL = "https://ml21.pythonanywhere.com"; // ← 改成你当前的公网地址
+        const TUNNEL_URL = "https://ml21.pythonanywhere.com";
         let mediaRecorder = null;
         let audioBlob = null;
         let editId = null;
-        let currentImageFile = null;
+        let currentImageFiles = [];
         let currentTags = [];
         let allTags = [];
         let activeTag = "";
         let isRecording = false;
+        let currentUser = "";
+        let allNotesCache = [];
+        let calendarYear = null;
+        let calendarMonth = null;
+        let selectedDate = null;
+        const MAX_IMAGES = 9;
+
+        // ===== 登录 =====
+        async function doLogin() {
+            const username = document.getElementById("loginUser").value.trim();
+            const password = document.getElementById("loginPass").value;
+            const errBox = document.getElementById("loginError");
+            const btn = document.getElementById("loginBtn");
+
+            if (!username || !password) { errBox.textContent = "请输入账号和密码"; return; }
+            btn.disabled = true;
+            btn.textContent = "登录中...";
+            errBox.textContent = "";
+
+            try {
+                const res = await fetch(`${API_BASE}/api/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({ username, password })
+                });
+                const ret = await res.json();
+                if (ret.code === 0) {
+                    currentUser = ret.username;
+                    showApp();
+                } else {
+                    errBox.textContent = ret.msg || "登录失败";
+                    btn.disabled = false;
+                    btn.textContent = "进入";
+                }
+            } catch (e) {
+                errBox.textContent = "网络错误：" + e.message;
+                btn.disabled = false;
+                btn.textContent = "进入";
+            }
+        }
+
+        async function doLogout() {
+            if (!confirm("确认退出登录？")) return;
+            await fetch(`${API_BASE}/api/logout`, { method: "POST", credentials: "include" });
+            location.reload();
+        }
+
+        async function checkAuth() {
+            try {
+                const res = await fetch(`${API_BASE}/api/me`, { credentials: "include" });
+                if (res.ok) {
+                    const ret = await res.json();
+                    if (ret.code === 0) {
+                        currentUser = ret.username;
+                        showApp();
+                        return;
+                    }
+                }
+            } catch (e) { }
+            document.getElementById("loginView").style.display = "flex";
+            document.getElementById("appView").classList.remove("show");
+        }
+
+        function showApp() {
+            document.getElementById("loginView").style.display = "none";
+            document.getElementById("appView").classList.add("show");
+            document.getElementById("greetName").textContent = currentUser;
+            switchTab("home");
+        }
+
+        document.getElementById("loginPass").addEventListener("keypress", e => {
+            if (e.key === "Enter") doLogin();
+        });
+        document.getElementById("loginUser").addEventListener("keypress", e => {
+            if (e.key === "Enter") document.getElementById("loginPass").focus();
+        });
 
         // ===== 界面切换 =====
         function switchTab(tab) {
-            document.getElementById("tabEdit").classList.toggle("active", tab === "edit");
-            document.getElementById("tabList").classList.toggle("active", tab === "list");
-            document.getElementById("editView").classList.toggle("hidden", tab !== "edit");
-            document.getElementById("listView").classList.toggle("hidden", tab !== "list");
+            ["home", "list", "edit", "calendar"].forEach(t => {
+                const view = document.getElementById(t + "View");
+                if (view) view.classList.toggle("hidden", t !== tab);
+                const nav = document.getElementById("nav" + t.charAt(0).toUpperCase() + t.slice(1));
+                if (nav) nav.classList.toggle("active", t === tab);
+            });
+            if (tab === "home") loadHome();
             if (tab === "list") loadNotes();
+            if (tab === "calendar") loadCalendar();
+            window.scrollTo({ top: 0, behavior: "smooth" });
         }
 
         // ===== 标签 =====
@@ -853,10 +1593,7 @@
             input.value = "";
             renderTags();
         }
-        function removeTag(tag) {
-            currentTags = currentTags.filter(t => t !== tag);
-            renderTags();
-        }
+        function removeTag(tag) { currentTags = currentTags.filter(t => t !== tag); renderTags(); }
         function renderTags() {
             const box = document.getElementById("tagList");
             box.innerHTML = "";
@@ -865,31 +1602,28 @@
                 span.className = "tag";
                 const text = document.createTextNode(t + " ");
                 const x = document.createElement("span");
-                x.className = "remove-tag";
-                x.textContent = "×";
+                x.className = "remove-tag"; x.textContent = "×";
                 x.onclick = () => removeTag(t);
-                span.appendChild(text);
-                span.appendChild(x);
+                span.appendChild(text); span.appendChild(x);
                 box.appendChild(span);
             });
         }
 
-        // ===== 图片压缩 + 预览 =====
+        // ===== 图片压缩 =====
         function compressImage(file, maxWidth = 1200, quality = 0.75) {
-            return new Promise((resolve) => {
+            return new Promise(resolve => {
                 const reader = new FileReader();
-                reader.onload = (e) => {
+                reader.onload = e => {
                     const img = new Image();
                     img.onload = () => {
                         let w = img.width, h = img.height;
                         if (w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
                         const canvas = document.createElement("canvas");
                         canvas.width = w; canvas.height = h;
-                        const ctx = canvas.getContext("2d");
-                        ctx.drawImage(img, 0, 0, w, h);
-                        canvas.toBlob((blob) => {
-                            const compressed = new File([blob], file.name.replace(/\.[^.]+$/, ".jpg"), { type: "image/jpeg" });
-                            resolve(compressed);
+                        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+                        canvas.toBlob(blob => {
+                            const name = (file.name || "image").replace(/\.[^.]+$/, ".jpg");
+                            resolve(new File([blob], name, { type: "image/jpeg" }));
                         }, "image/jpeg", quality);
                     };
                     img.src = e.target.result;
@@ -899,18 +1633,45 @@
         }
 
         document.getElementById("imgInput").onchange = async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const compressed = await compressImage(file);
-            currentImageFile = compressed;
-            const url = URL.createObjectURL(compressed);
-            document.getElementById("imgPreview").src = url;
-            document.getElementById("imgPreviewBox").classList.remove("hidden");
+            const files = Array.from(e.target.files || []);
+            if (!files.length) return;
+            const remain = MAX_IMAGES - currentImageFiles.length;
+            if (remain <= 0) { alert(`最多只能上传 ${MAX_IMAGES} 张图片`); e.target.value = ""; return; }
+            const accept = files.slice(0, remain);
+            if (files.length > remain) alert(`还能再加 ${remain} 张，多余的已忽略`);
+            for (const f of accept) {
+                const compressed = await compressImage(f);
+                currentImageFiles.push({ file: compressed, url: URL.createObjectURL(compressed) });
+            }
+            e.target.value = "";
+            renderImagePreviews();
         };
-        function clearImage() {
-            currentImageFile = null;
+
+        function renderImagePreviews() {
+            const box = document.getElementById("imgPreviewBox");
+            const grid = document.getElementById("imgPreviewGrid");
+            const count = document.getElementById("imgCount");
+            grid.innerHTML = "";
+            if (currentImageFiles.length === 0) { box.classList.add("hidden"); return; }
+            box.classList.remove("hidden");
+            count.textContent = currentImageFiles.length;
+            currentImageFiles.forEach((item, idx) => {
+                const div = document.createElement("div");
+                div.className = "preview-item";
+                const img = document.createElement("img");
+                img.src = item.url;
+                const btn = document.createElement("button");
+                btn.className = "remove-btn"; btn.textContent = "×";
+                btn.onclick = ev => { ev.stopPropagation(); removeImage(idx); };
+                div.appendChild(img); div.appendChild(btn);
+                grid.appendChild(div);
+            });
+        }
+        function removeImage(idx) { currentImageFiles.splice(idx, 1); renderImagePreviews(); }
+        function clearImages() {
+            currentImageFiles = [];
             document.getElementById("imgInput").value = "";
-            document.getElementById("imgPreviewBox").classList.add("hidden");
+            renderImagePreviews();
         }
 
         // ===== 录音 =====
@@ -925,8 +1686,7 @@
                     mediaRecorder.ondataavailable = e => chunks.push(e.data);
                     mediaRecorder.onstop = () => {
                         audioBlob = new Blob(chunks, { type: 'audio/webm' });
-                        const url = URL.createObjectURL(audioBlob);
-                        document.getElementById("audioPreview").src = url;
+                        document.getElementById("audioPreview").src = URL.createObjectURL(audioBlob);
                         document.getElementById("audioPreviewBox").classList.remove("hidden");
                     };
                     mediaRecorder.start();
@@ -954,18 +1714,22 @@
             const title = document.getElementById('title').value.trim();
             const content = document.getElementById('content').value.trim();
             const isPublic = document.getElementById('isPublic').checked ? 1 : 0;
-            const loadingDom = document.getElementById("submitLoading");
-            loadingDom.style.display = "block";
+
+            if (!title && !content && currentImageFiles.length === 0 && !audioBlob) {
+                alert("标题、正文、图片、语音至少要填一样哦～");
+                return;
+            }
 
             try {
                 if (editId) {
                     const res = await fetch(`${API_BASE}/api/note/${editId}`, {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },
+                        credentials: "include",
                         body: JSON.stringify({ title, content, is_public: isPublic, tags: currentTags.join(",") })
                     });
                     const ret = await res.json();
-                    if (ret.code === 0) { alert("修改成功"); resetForm(); loadNotes(); }
+                    if (ret.code === 0) { alert("修改成功"); resetForm(); loadHome(); switchTab("home"); }
                     else alert(ret.msg);
                 } else {
                     const uuid = crypto.randomUUID();
@@ -975,18 +1739,18 @@
                     formData.append("content", content);
                     formData.append("is_public", isPublic);
                     formData.append("tags", currentTags.join(","));
-                    if (currentImageFile) formData.append("img", currentImageFile);
+                    currentImageFiles.forEach(item => formData.append("img", item.file, item.file.name));
                     if (audioBlob) formData.append("audio", audioBlob, "audio.webm");
 
-                    const res = await fetch(`${API_BASE}/api/note`, { method: "POST", body: formData });
+                    const res = await fetch(`${API_BASE}/api/note`, {
+                        method: "POST", body: formData, credentials: "include"
+                    });
                     const ret = await res.json();
-                    if (ret.code === 0) { alert("保存成功"); resetForm(); loadNotes(); }
+                    if (ret.code === 0) { alert("保存成功"); resetForm(); loadHome(); switchTab("home"); }
                     else alert(ret.msg);
                 }
             } catch (e) {
                 alert("请求异常：" + e.message);
-            } finally {
-                loadingDom.style.display = "none";
             }
         };
 
@@ -995,18 +1759,79 @@
             document.getElementById('title').value = "";
             document.getElementById('content').value = "";
             document.getElementById('isPublic').checked = false;
-            document.getElementById('imgInput').value = "";
-            currentImageFile = null;
-            document.getElementById("imgPreviewBox").classList.add("hidden");
-            audioBlob = null;
-            document.getElementById("audioPreviewBox").classList.add("hidden");
+            clearImages();
+            clearAudio();
             currentTags = [];
             renderTags();
         }
 
-        // ===== 列表加载 =====
+        // ===== 首页 =====
+        async function loadHome() {
+            const res = await fetch(`${API_BASE}/api/note/list`, { credentials: "include" });
+            const ret = await res.json();
+            if (ret.code !== 0) return;
+            allNotesCache = ret.data;
+
+            const grid = document.getElementById("homeGrid");
+            grid.innerHTML = "";
+
+            const data = ret.data.slice(0, 8);
+            if (data.length === 0) {
+                grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:#b0aa9c">
+                    <div style="font-size:48px;margin-bottom:12px">📭</div>
+                    <p>还没有卡片，点上面按钮写一张吧~</p>
+                </div>`;
+                return;
+            }
+            data.forEach(item => grid.appendChild(buildHomeCard(item)));
+        }
+
+        function buildHomeCard(item) {
+            const div = document.createElement("div");
+            div.className = "home-card";
+            const imgPaths = Array.isArray(item.img_paths) && item.img_paths.length
+                ? item.img_paths : (item.img_path ? [item.img_path] : []);
+            const isVoiceOnly = !item.title && !item.content && imgPaths.length === 0 && item.audio_path;
+
+            let thumbInner = "";
+            if (isVoiceOnly) {
+                thumbInner = `<div class="thumb voice"><div class="waveform">
+                    <span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span>
+                </div></div>`;
+            } else if (imgPaths.length > 0) {
+                thumbInner = `<div class="thumb">
+                    <img src="${API_BASE}/uploads/${imgPaths[0]}" loading="lazy" alt="">
+                    ${imgPaths.length > 1 ? `<span class="count-badge">+${imgPaths.length - 1}</span>` : ""}
+                </div>`;
+            } else {
+                thumbInner = "";
+            }
+
+            const timeStr = new Date(item.create_time).toLocaleDateString();
+            div.innerHTML = `
+                ${thumbInner}
+                <div class="title"></div>
+                <div class="meta">${timeStr}</div>
+            `;
+            div.querySelector(".title").textContent = item.title || (isVoiceOnly ? "语音" : "无标题");
+            div.onclick = () => openDetail(item.id);
+            return div;
+        }
+
+        // ===== 搜索辅助 =====
+        function quickSearch(kw) {
+            document.getElementById("searchInput").value = kw;
+            loadNotes(kw);
+        }
+        function 今天Str() {
+            const d = new Date();
+            return `${d.getMonth() + 1}月${d.getDate()}日`;
+        }
+
+        // ===== 列表 =====
         async function loadNotes(keyword = "") {
-            const res = await fetch(`${API_BASE}/api/note/list`);
+            const res = await fetch(`${API_BASE}/api/note/list`, { credentials: "include" });
             const ret = await res.json();
             if (ret.code !== 0) return;
             const listDom = document.getElementById("noteList");
@@ -1014,85 +1839,123 @@
 
             allTags = [];
             ret.data.forEach(item => {
-                if (item.tags) {
-                    item.tags.split(",").forEach(t => {
-                        if (t && !allTags.includes(t)) allTags.push(t);
-                    });
-                }
+                if (item.tags) item.tags.split(",").forEach(t => { if (t && !allTags.includes(t)) allTags.push(t); });
             });
             renderTagFilter();
 
             const filterData = ret.data.filter(item => {
-                const matchKeyword = (item.title || "").toLowerCase().includes(keyword.toLowerCase()) ||
-                    (item.content || "").toLowerCase().includes(keyword.toLowerCase());
                 const matchTag = !activeTag || (item.tags || "").split(",").includes(activeTag);
-                return matchKeyword && matchTag;
+                if (!matchTag) return false;
+
+                const kwRaw = keyword.trim();
+                if (!kwRaw) return true;
+
+                const keywords = kwRaw.toLowerCase().split(/\s+/).filter(Boolean);
+                const title = (item.title || "").toLowerCase();
+                const content = (item.content || "").toLowerCase();
+                const tags = (item.tags || "").toLowerCase().split(",");
+
+                const d = new Date(item.create_time);
+                const y = d.getFullYear(), m = d.getMonth() + 1, day = d.getDate();
+                const dateStr1 = `${y}-${String(m).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+                const dateStr2 = `${y}/${m}/${day}`;
+                const dateStr3 = `${y}年${m}月${day}日`;
+                const dateStr4 = `${m}月${day}日`;
+                const dateStr5 = `${m}/${day}`;
+                const dateStr6 = `${m}-${day}`;
+                const allDates = [dateStr1, dateStr2, dateStr3, dateStr4, dateStr5, dateStr6].join(" ").toLowerCase();
+
+                const imgPaths = Array.isArray(item.img_paths) && item.img_paths.length
+                    ? item.img_paths : (item.img_path ? [item.img_path] : []);
+                const hasImg = imgPaths.length > 0;
+                const hasAudio = !!item.audio_path;
+                const isVoiceOnly = !item.title && !item.content && !hasImg && hasAudio;
+                const typeKeywords = [];
+                if (hasImg) typeKeywords.push("图片", "图", "照片", "image", "photo");
+                if (hasAudio) typeKeywords.push("语音", "录音", "音频", "voice", "audio");
+                if (isVoiceOnly) typeKeywords.push("纯语音");
+                const typeStr = typeKeywords.join(" ").toLowerCase();
+
+                const haystack = [title, content, tags.join(" "), allDates, typeStr].join(" ");
+                return keywords.every(kw => haystack.includes(kw));
             });
 
             if (filterData.length === 0) {
-                listDom.innerHTML = `
-                    <div class="empty-state">
-                        <span class="emoji">📭</span>
-                        <p>还没有卡片，去新建一张吧~</p>
-                    </div>
-                `;
+                listDom.innerHTML = `<div class="empty-state"><span class="emoji">📭</span><p>没有匹配的卡片</p></div>`;
                 return;
             }
 
-            filterData.forEach(item => {
-                const div = document.createElement("div");
-                div.className = "note-item";
-                const timeStr = new Date(item.create_time).toLocaleString();
-                const tags = (item.tags || "").split(",").filter(Boolean);
-                const tagHtml = tags.map(t => `<span class="tag">${t}</span>`).join("");
-                const thumbHtml = item.img_path
-                    ? `<div class="note-thumb"><img src="${API_BASE}/uploads/${item.img_path}" alt="缩略图" loading="lazy"></div>`
-                    : `<div class="note-thumb">无图</div>`;
-                const publicBadge = item.is_public
-                    ? `<span class="public-badge yes">🌐 公开</span>`
-                    : `<span class="public-badge no">🔒 私密</span>`;
-                div.innerHTML = `
-                    ${thumbHtml}
-                    <div class="note-body">
-                        <div class="note-title"></div>
-                        <div class="note-content"></div>
-                        <div class="tag-list">${tagHtml}</div>
-                        <div class="note-meta">${timeStr} ${publicBadge}</div>
-                        <div class="note-actions">
-                            <button class="btn-sm btn-view" data-action="view">详情</button>
-                            <button class="btn-sm btn-qr" data-action="qr">二维码</button>
-                            <button class="btn-sm btn-edit" data-action="edit">编辑</button>
-                            <button class="btn-sm btn-del" data-action="del">删除</button>
-                        </div>
+            filterData.forEach(item => listDom.appendChild(buildCardItem(item)));
+        }
+
+        // 构建单个卡片
+        function buildCardItem(item) {
+            const timeStr = new Date(item.create_time).toLocaleString();
+            const tags = (item.tags || "").split(",").filter(Boolean);
+            const tagHtml = tags.map(t => `<span class="tag">${t}</span>`).join("");
+            const imgPaths = Array.isArray(item.img_paths) && item.img_paths.length
+                ? item.img_paths : (item.img_path ? [item.img_path] : []);
+            const isVoiceOnly = !item.title && !item.content && imgPaths.length === 0 && item.audio_path;
+
+            const badge = item.is_public
+                ? `<span class="public-badge yes">🌐 公开</span>`
+                : `<span class="public-badge no">🔒 私密</span>`;
+            const contentText = isVoiceOnly ? "🎤 语音卡片" : (item.content || "无内容");
+
+            let thumbHtml = "";
+            if (isVoiceOnly) {
+                thumbHtml = `<div class="note-thumb voice"><div class="waveform">
+                    <span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span>
+                </div></div>`;
+            } else if (imgPaths.length > 0) {
+                thumbHtml = `<div class="note-thumb" style="position:relative">
+                    <img src="${API_BASE}/uploads/${imgPaths[0]}" loading="lazy" alt="">
+                    ${imgPaths.length > 1 ? `<span style="position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,0.6);color:#fff;font-size:10px;padding:1px 6px;border-radius:8px">+${imgPaths.length - 1}</span>` : ""}
+                </div>`;
+            }
+
+            const div = document.createElement("div");
+            div.className = "note-item";
+            div.innerHTML = `
+                ${thumbHtml}
+                <div class="note-body">
+                    <div class="note-title"></div>
+                    <div class="note-content"></div>
+                    <div class="tag-list">${tagHtml}</div>
+                    <div class="note-meta">${timeStr} ${badge}</div>
+                    <div class="note-actions">
+                        <button class="btn-sm btn-view" data-action="view">详情</button>
+                        <button class="btn-sm btn-qr" data-action="qr">二维码</button>
+                        <button class="btn-sm btn-edit" data-action="edit">编辑</button>
+                        <button class="btn-sm btn-del" data-action="del">删除</button>
                     </div>
-                `;
-                div.querySelector(".note-title").textContent = item.title || "无标题";
-                div.querySelector(".note-content").textContent = item.content || "无内容";
+                </div>
+            `;
+            div.querySelector(".note-title").textContent = item.title || (isVoiceOnly ? "语音" : "无标题");
+            div.querySelector(".note-content").textContent = contentText;
 
-                div.addEventListener("click", (e) => {
-                    if (e.target.tagName === "BUTTON") return;
-                    openDetail(item.id);
-                });
-                div.querySelector('[data-action="view"]').onclick = (e) => { e.stopPropagation(); openDetail(item.id); };
-                div.querySelector('[data-action="qr"]').onclick = (e) => { e.stopPropagation(); openQrcode(item.id, item.is_public); };
-                div.querySelector('[data-action="edit"]').onclick = (e) => { e.stopPropagation(); editNote(item.id); };
-                div.querySelector('[data-action="del"]').onclick = (e) => { e.stopPropagation(); delNote(item.id); };
-
-                listDom.appendChild(div);
+            div.addEventListener("click", e => {
+                if (e.target.tagName === "BUTTON") return;
+                openDetail(item.id);
             });
+            div.querySelector('[data-action="view"]').onclick = e => { e.stopPropagation(); openDetail(item.id); };
+            div.querySelector('[data-action="qr"]').onclick = e => { e.stopPropagation(); openQrcode(item.id, item.is_public); };
+            div.querySelector('[data-action="edit"]').onclick = e => { e.stopPropagation(); editNote(item.id); };
+            div.querySelector('[data-action="del"]').onclick = e => { e.stopPropagation(); delNote(item.id); };
+
+            return div;
         }
 
         function renderTagFilter() {
             const box = document.getElementById("tagFilter");
             box.innerHTML = "";
             if (allTags.length === 0) return;
-
             const allBtn = document.createElement("button");
             allBtn.innerText = "全部";
             allBtn.className = activeTag === "" ? "active" : "";
             allBtn.onclick = () => { activeTag = ""; loadNotes(document.getElementById("searchInput").value.trim()); };
             box.appendChild(allBtn);
-
             allTags.forEach(t => {
                 const btn = document.createElement("button");
                 btn.innerText = t;
@@ -1102,9 +1965,100 @@
             });
         }
 
+        // ===== 日历 =====
+        async function loadCalendar() {
+            const res = await fetch(`${API_BASE}/api/note/list`, { credentials: "include" });
+            const ret = await res.json();
+            if (ret.code !== 0) return;
+            allNotesCache = ret.data;
+
+            if (!calendarYear) {
+                const base = allNotesCache.length ? new Date(allNotesCache[0].create_time) : new Date();
+                calendarYear = base.getFullYear();
+                calendarMonth = base.getMonth();
+            }
+            renderCalendar();
+        }
+
+        function changeMonth(delta) {
+            calendarMonth += delta;
+            if (calendarMonth < 0) { calendarMonth = 11; calendarYear--; }
+            if (calendarMonth > 11) { calendarMonth = 0; calendarYear++; }
+            selectedDate = null;
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const title = document.getElementById("calendarTitle");
+            title.textContent = `${calendarYear} 年 ${calendarMonth + 1} 月`;
+
+            const countByDay = {};
+            allNotesCache.forEach(n => {
+                const d = new Date(n.create_time);
+                if (d.getFullYear() === calendarYear && d.getMonth() === calendarMonth) {
+                    const key = `${calendarYear}-${String(calendarMonth + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+                    countByDay[key] = (countByDay[key] || 0) + 1;
+                }
+            });
+
+            const grid = document.getElementById("calendarGrid");
+            grid.innerHTML = "";
+
+            const firstDay = new Date(calendarYear, calendarMonth, 1).getDay();
+            const daysInMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate();
+            const today = new Date();
+            const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+
+            for (let i = 0; i < firstDay; i++) {
+                const empty = document.createElement("div");
+                empty.className = "cal-cell empty";
+                grid.appendChild(empty);
+            }
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const key = `${calendarYear}-${String(calendarMonth + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+                const cell = document.createElement("div");
+                cell.className = "cal-cell";
+                if (key === todayKey) cell.classList.add("today");
+                if (countByDay[key]) cell.classList.add("has-content");
+                if (key === selectedDate) cell.classList.add("selected");
+
+                cell.innerHTML = `<span class="day">${d}</span>`;
+                cell.onclick = () => {
+                    selectedDate = key;
+                    renderCalendar();
+                };
+                grid.appendChild(cell);
+            }
+
+            renderSelectedDay();
+        }
+
+        function renderSelectedDay() {
+            const box = document.getElementById("calendarSelected");
+            if (!selectedDate) {
+                box.innerHTML = `<p class="empty-tip">点击日期查看当天创作的卡片</p>`;
+                return;
+            }
+            const [y, m, d] = selectedDate.split("-").map(Number);
+            const dayNotes = allNotesCache.filter(n => {
+                const nd = new Date(n.create_time);
+                return nd.getFullYear() === y && nd.getMonth() === m - 1 && nd.getDate() === d;
+            });
+
+            const label = `<div class="date-label">${y} 年 ${m} 月 ${d} 日 · ${dayNotes.length} 张卡片</div>`;
+            if (dayNotes.length === 0) {
+                box.innerHTML = label + `<p class="empty-tip">这天还没有创作</p>`;
+                return;
+            }
+
+            box.innerHTML = label;
+            dayNotes.forEach(item => box.appendChild(buildCardItem(item)));
+        }
+
         // ===== 编辑 =====
         async function editNote(id) {
-            const res = await fetch(`${API_BASE}/api/note/${id}?admin=1`);
+            const res = await fetch(`${API_BASE}/api/note/${id}?admin=1`, { credentials: "include" });
             const ret = await res.json();
             if (ret.code !== 0) { alert(ret.msg); return; }
             const item = ret.data;
@@ -1115,63 +2069,140 @@
             currentTags = (item.tags || "").split(",").filter(Boolean);
             renderTags();
             switchTab('edit');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         async function delNote(id) {
             if (!confirm("确认永久删除这条随笔卡片？")) return;
-            const res = await fetch(`${API_BASE}/api/note/${id}`, { method: "DELETE" });
+            const res = await fetch(`${API_BASE}/api/note/${id}`, { method: "DELETE", credentials: "include" });
             const ret = await res.json();
-            if (ret.code === 0) { alert("已删除"); loadNotes(); }
+            if (ret.code === 0) { loadNotes(); loadHome(); }
+            else alert(ret.msg);
         }
 
         // ===== 二维码 =====
         async function openQrcode(id, isPublic) {
-            if (!isPublic) { alert("请先开启卡片【公开】，才可生成访问二维码"); return; }
+            if (!isPublic) { alert("请先开启卡片【公开】"); return; }
             const url = `${TUNNEL_URL}/card.html?id=${id}`;
             const modal = document.getElementById("qrModal");
             const box = document.getElementById("qrCanvasBox");
             box.innerHTML = "";
             const canvas = document.createElement("canvas");
             box.appendChild(canvas);
-            await QRCode.toCanvas(canvas, url, { width: 240, margin: 1, color: { dark: "#1e293b", light: "#ffffff" } });
+            await QRCode.toCanvas(canvas, url, { width: 240, margin: 1, color: { dark: "#1a1a1a", light: "#ffffff" } });
             modal.classList.add("show");
         }
         function closeQrModal() { document.getElementById("qrModal").classList.remove("show"); }
 
-        // ===== 详情 =====
+        // ===== 详情轮播 =====
         async function openDetail(id) {
-            const res = await fetch(`${API_BASE}/api/note/${id}?admin=1`);
+            const res = await fetch(`${API_BASE}/api/note/${id}?admin=1`, { credentials: "include" });
             const ret = await res.json();
             if (ret.code !== 0) { alert(ret.msg); return; }
             const item = ret.data;
+
             document.getElementById("detailTitle").textContent = item.title || "无标题";
             document.getElementById("detailTime").textContent = "创建：" + new Date(item.create_time).toLocaleString();
-            document.getElementById("detailContent").textContent = item.content || "";
             const tags = (item.tags || "").split(",").filter(Boolean);
             document.getElementById("detailTags").innerHTML = tags.map(t => `<span class="tag">${t}</span>`).join("");
-            document.getElementById("detailImgBox").innerHTML = item.img_path
-                ? `<img class="detail-img" src="${API_BASE}/uploads/${item.img_path}" alt="图片">` : "";
-            document.getElementById("detailAudioBox").innerHTML = item.audio_path
-                ? `<audio controls style="width:100%;margin-top:10px" src="${API_BASE}/uploads/${item.audio_path}"></audio>` : "";
+
+            const imgPaths = Array.isArray(item.img_paths) && item.img_paths.length
+                ? item.img_paths : (item.img_path ? [item.img_path] : []);
+
+            const wrap = document.getElementById("detailCarousel");
+            wrap.innerHTML = "";
+
+            const slides = [];
+            imgPaths.forEach((p, i) => {
+                slides.push({ type: "image", html: `<img src="${API_BASE}/uploads/${p}" alt="图片 ${i + 1}">` });
+            });
+            if (item.title || item.content) {
+                slides.push({
+                    type: "text",
+                    html: `${item.title ? `<div class="slide-text-title"></div>` : ""}<div class="slide-text"></div>`,
+                    title: item.title || "", content: item.content || ""
+                });
+            }
+            if (item.audio_path) {
+                slides.push({ type: "audio", html: `<audio controls src="${API_BASE}/uploads/${item.audio_path}"></audio>` });
+            }
+
+            if (slides.length === 0) {
+                wrap.innerHTML = `<p style="text-align:center;color:#7a7568">（无内容）</p>`;
+            } else {
+                const track = document.createElement("div");
+                track.className = "carousel-track";
+                track.id = "carouselTrack";
+                slides.forEach(s => {
+                    const slide = document.createElement("div");
+                    slide.className = "carousel-slide";
+                    slide.innerHTML = s.html;
+                    if (s.type === "text") {
+                        if (s.title) slide.querySelector(".slide-text-title").textContent = s.title;
+                        slide.querySelector(".slide-text").textContent = s.content || "";
+                    }
+                    track.appendChild(slide);
+                });
+
+                const dots = document.createElement("div");
+                dots.className = "carousel-dots";
+                dots.id = "carouselDots";
+                slides.forEach((_, i) => {
+                    const d = document.createElement("span");
+                    if (i === 0) d.classList.add("active");
+                    d.onclick = () => scrollToSlide(i);
+                    dots.appendChild(d);
+                });
+
+                wrap.appendChild(track);
+                wrap.appendChild(dots);
+
+                if (slides.length > 1) {
+                    const prev = document.createElement("button");
+                    prev.className = "carousel-arrow prev"; prev.textContent = "‹";
+                    prev.onclick = () => scrollToSlide(currentSlideIndex() - 1);
+                    const next = document.createElement("button");
+                    next.className = "carousel-arrow next"; next.textContent = "›";
+                    next.onclick = () => scrollToSlide(currentSlideIndex() + 1);
+                    wrap.appendChild(prev); wrap.appendChild(next);
+
+                    track.addEventListener("scroll", () => {
+                        const idx = Math.round(track.scrollLeft / track.clientWidth);
+                        document.querySelectorAll("#carouselDots span").forEach((d, i) => {
+                            d.classList.toggle("active", i === idx);
+                        });
+                    });
+                }
+            }
+
             document.getElementById("detailModal").classList.add("show");
+        }
+
+        function currentSlideIndex() {
+            const track = document.getElementById("carouselTrack");
+            if (!track) return 0;
+            return Math.round(track.scrollLeft / track.clientWidth);
+        }
+        function scrollToSlide(idx) {
+            const track = document.getElementById("carouselTrack");
+            if (!track) return;
+            const total = track.children.length;
+            idx = Math.max(0, Math.min(total - 1, idx));
+            track.scrollTo({ left: idx * track.clientWidth, behavior: "smooth" });
         }
         function closeDetailModal() { document.getElementById("detailModal").classList.remove("show"); }
 
-        // 点击遮罩关闭弹窗
-        document.getElementById("qrModal").onclick = (e) => { if (e.target.id === "qrModal") closeQrModal(); };
-        document.getElementById("detailModal").onclick = (e) => { if (e.target.id === "detailModal") closeDetailModal(); };
+        document.getElementById("qrModal").onclick = e => { if (e.target.id === "qrModal") closeQrModal(); };
+        document.getElementById("detailModal").onclick = e => { if (e.target.id === "detailModal") closeDetailModal(); };
 
-        // 回车添加标签
-        document.getElementById("tagInput").addEventListener("keypress", (e) => {
+        document.getElementById("tagInput").addEventListener("keypress", e => {
             if (e.key === "Enter") { e.preventDefault(); addTag(); }
         });
-
         document.getElementById("searchInput").oninput = e => loadNotes(e.target.value.trim());
 
         // 初始化
         renderTags();
-        loadNotes();
+        renderImagePreviews();
+        checkAuth();
     </script>
 </body>
 
