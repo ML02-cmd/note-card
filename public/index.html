@@ -512,10 +512,15 @@
             box-shadow: 0 0 0 4px rgba(26, 26, 26, 0.06);
         }
 
-        textarea {
+        /* ===== 正文 textarea：自动增高 ===== */
+        textarea#content {
             min-height: 120px;
-            resize: vertical;
+            resize: none;
+            /* 禁止手动拖拽 */
+            overflow-y: hidden;
+            /* 隐藏滚动条 */
             line-height: 1.7;
+            transition: height 0.1s ease;
         }
 
         button {
@@ -1498,6 +1503,17 @@
         let selectedDate = null;
         const MAX_IMAGES = 9;
 
+        // ===== 正文 textarea 自动增高 =====
+        function autoGrowTextarea(el) {
+            if (!el) return;
+            el.style.height = "auto";
+            el.style.height = el.scrollHeight + "px";
+        }
+        const contentEl = document.getElementById("content");
+        if (contentEl) {
+            contentEl.addEventListener("input", () => autoGrowTextarea(contentEl));
+        }
+
         // ===== 登录 =====
         async function doLogin() {
             const username = document.getElementById("loginUser").value.trim();
@@ -1580,6 +1596,7 @@
             if (tab === "home") loadHome();
             if (tab === "list") loadNotes();
             if (tab === "calendar") loadCalendar();
+            if (tab === "edit") autoGrowTextarea(document.getElementById("content"));
             window.scrollTo({ top: 0, behavior: "smooth" });
         }
 
@@ -1763,6 +1780,7 @@
             clearAudio();
             currentTags = [];
             renderTags();
+            autoGrowTextarea(document.getElementById("content"));
         }
 
         // ===== 首页 =====
@@ -2069,6 +2087,8 @@
             currentTags = (item.tags || "").split(",").filter(Boolean);
             renderTags();
             switchTab('edit');
+            // 回填内容后，自动调整高度
+            setTimeout(() => autoGrowTextarea(document.getElementById("content")), 0);
         }
 
         async function delNote(id) {
